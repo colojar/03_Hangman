@@ -15,39 +15,16 @@ namespace _03_Hangman
         {
             while (true)
             {
-                List<string> hangmanLogo = new()
-                {
-                    "  _                                              ",
-                    " | |                                             ",
-                    " | |__   __ _ _ __   __ _ _ __ ___   __ _ _ __   ",
-                    " | '_ \\ / _` | '_ \\ / _` | '_ ` _ \\ / _` | '_ \\  ",
-                    " | | | | (_| | | | | (_| | | | | | | (_| | | | | ",
-                    " |_| |_|\\__,_|_| |_|\\__, |_| |_| |_|\\__,_|_| |_| ",
-                    "                     __/ |                      ",
-                    "                    |___/                       ",
-                    "",
-                    "   +---+ ",
-                    "   |   | ",
-                    "   O   | ",
-                    "  /|\\  | ",
-                    "  / \\  | ",
-                    "       | ",
-                    "========="
-                };
+
                 // I'm lazy and don't want to type the word each time the program starts.
-                List<string> words = new()
-                {
+                List<string> words = [
                     "planet", "rocket", "castle", "forest", "hunter",
                     "dragon", "shadow", "pirate", "silver", "glider",
                     "puzzle", "goblin", "crater", "vortex", "beacon",
                     "temple", "wizard", "plasma", "sphinx", "serpent"
-                };
+                ];
                 // Display the logo
-                Console.Clear();
-                foreach (string line in hangmanLogo)
-                {
-                    Console.WriteLine(line);
-                }
+                HangmanLogo();
 
                 Console.WriteLine();
                 Console.WriteLine("Please enter a word to guess or press enter to use a random word.");
@@ -75,7 +52,7 @@ namespace _03_Hangman
                 }
                 if (string.IsNullOrWhiteSpace(wordToGuess))
                 {
-                    Random random = new Random();
+                    Random random = new();
                     int index = random.Next(words.Count); // Generate a random index
                     wordToGuess = words[index]; // Return the word at the random index
                 }
@@ -111,14 +88,10 @@ namespace _03_Hangman
                 string nextMessage = ""; // Variable to store the message for the next iteration of the loop
                 int wrongGuesses = 0;
                 string guessedLetters = "";
-                string displayWord = new string('_', wordToGuess.Length);
+                string displayWord = new('_', wordToGuess.Length);
                 while (displayWord.Contains('_'))
                 {
-                    Console.Clear();
-                    foreach (string line in hangmanLogo)
-                    {
-                        Console.WriteLine(line);
-                    }
+                    HangmanLogo();
                     if (!string.IsNullOrEmpty(nextMessage))
                     {
                         Console.WriteLine();
@@ -129,16 +102,7 @@ namespace _03_Hangman
 
                     if (endGame)
                     {
-                        Console.WriteLine("Do you want to play again? (y/n)");
-                        string? playAgain = Console.ReadLine()?.ToLower();
-                        if (playAgain == "y")
-                        {
-                            break; // Exit the inner loop and restart the outer loop
-                        }
-                        else
-                        {
-                            Environment.Exit(0); // Quit the game
-                        }
+                        PlayAgain();
                     }
 
                     if (lastGuess)
@@ -160,11 +124,7 @@ namespace _03_Hangman
                             endGame = true; // Set endGame to true to exit the loop
                             continue;
                         }
-                        Console.Clear();
-                        foreach (string line in hangmanLogo)
-                        {
-                            Console.WriteLine(line);
-                        }
+                        HangmanLogo();
                     }
 
                     Console.WriteLine($"Word to guess: {displayWord}");
@@ -212,44 +172,53 @@ namespace _03_Hangman
 
                     if (displayWord == wordToGuess)
                     {
-                        Console.Clear();
-                        foreach (string line in hangmanLogo)
-                        {
-                            Console.WriteLine(line);
-                        }
+                        HangmanLogo();
                         Console.WriteLine($"Congratulations! You've guessed the word: {wordToGuess}");
-                        Console.WriteLine("Do you want to play again? (y/n)");
-                        string? playAgain = Console.ReadLine()?.ToLower();
-                        if (playAgain == "y")
-                        {
-                            break; // Exit the inner loop and restart the outer loop
-                        }
-                        else
-                        {
-                            Environment.Exit(0); // Quit the game
-                        }
+                        PlayAgain();
+
                     }
                     else if (wrongGuesses == maxWrongGuesses)
                     {
-                        Console.Clear();
-                        foreach (string line in hangmanLogo)
-                        {
-                            Console.WriteLine(line);
-                        }
+                        HangmanLogo();
                         Console.WriteLine($"Sorry, you've run out of guesses. The word was: {wordToGuess}");
-                        Console.WriteLine("Do you want to play again? (y/n)");
-                        string? playAgain = Console.ReadLine()?.ToLower();
-                        if (playAgain == "y")
-                        {
-                            break; // Exit the inner loop and restart the outer loop
-                        }
-                        else
-                        {
-                            Environment.Exit(0); // Quit the game
-                        }
+                        PlayAgain();
                     }
                 }
                 continue;
+            }
+        }
+        static void HangmanLogo()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.Clear();
+            Console.WriteLine("  _                                              ");
+            Console.WriteLine(" | |                                             ");
+            Console.WriteLine(" | |__   __ _ _ __   __ _ _ __ ___   __ _ _ __   ");
+            Console.WriteLine(" | '_ \\ / _` | '_ \\ / _` | '_ ` _ \\ / _` | '_ \\  ");
+            Console.WriteLine(" | | | | (_| | | | | (_| | | | | | | (_| | | | | ");
+            Console.WriteLine(" |_| |_|\\__,_|_| |_|\\__, |_| |_| |_|\\__,_|_| |_| ");
+            Console.WriteLine("                     __/ |                      ");
+            Console.WriteLine("                    |___/                       ");
+            Console.WriteLine();
+            Console.WriteLine("   +---+ ");
+            Console.WriteLine("   |   | ");
+            Console.WriteLine("   O   | ");
+            Console.WriteLine("  /|\\  | ");
+            Console.WriteLine("  / \\  | ");
+            Console.WriteLine("       | ");
+            Console.WriteLine("=========");
+        }
+        static void PlayAgain()
+        {
+            Console.WriteLine("Do you want to play again? (y/n)");
+            string? playAgain = Console.ReadLine()?.ToLower();
+            if (playAgain == "y")
+            {
+                Main();
+            }
+            else
+            {
+                Environment.Exit(0);
             }
         }
     }
