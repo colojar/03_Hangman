@@ -13,10 +13,14 @@ namespace _03_Hangman
     {
         static void Main()
         {
+            const string POSITIVE_USER_RESPONSE = "y";
+            const string NEGATIVE_USER_RESPONSE = "n";
+            const string QUIT_USER_RESPONSE = "q";
+            const string RESTART_USER_RESPONSE = "r";
+
             while (true)
             {
-                List<string> hangmanLogo = new()
-                {
+                List<string> hangmanLogo = [
                     "  _                                              ",
                     " | |                                             ",
                     " | |__   __ _ _ __   __ _ _ __ ___   __ _ _ __   ",
@@ -33,15 +37,14 @@ namespace _03_Hangman
                     "  / \\  | ",
                     "       | ",
                     "========="
-                };
+                ];
                 // I'm lazy and don't want to type the word each time the program starts.
-                List<string> words = new()
-                {
+                List<string> words = [
                     "planet", "rocket", "castle", "forest", "hunter",
                     "dragon", "shadow", "pirate", "silver", "glider",
                     "puzzle", "goblin", "crater", "vortex", "beacon",
                     "temple", "wizard", "plasma", "sphinx", "serpent"
-                };
+                ];
                 // Display the logo
                 Console.Clear();
                 foreach (string line in hangmanLogo)
@@ -51,7 +54,7 @@ namespace _03_Hangman
 
                 Console.WriteLine();
                 Console.WriteLine("Please enter a word to guess or press enter to use a random word.");
-                Console.WriteLine("(Press 'q' to quit or 'r' to restart)");
+                Console.WriteLine($"(Press '{QUIT_USER_RESPONSE}' to quit or '{RESTART_USER_RESPONSE}' to restart)");
                 string? wordToGuess = "";
                 ConsoleKeyInfo keyInfo;
                 do
@@ -64,18 +67,18 @@ namespace _03_Hangman
                     }
                 } while (keyInfo.Key != ConsoleKey.Enter);
                 Console.WriteLine();
-                if (wordToGuess == "q")
+                if (wordToGuess == QUIT_USER_RESPONSE)
                 {
                     break;
                 }
-                else if (wordToGuess == "r")
+                else if (wordToGuess == RESTART_USER_RESPONSE)
                 {
                     Console.Clear();
                     continue;
                 }
                 if (string.IsNullOrWhiteSpace(wordToGuess))
                 {
-                    Random random = new Random();
+                    Random random = new();
                     int index = random.Next(words.Count); // Generate a random index
                     wordToGuess = words[index]; // Return the word at the random index
                 }
@@ -111,7 +114,7 @@ namespace _03_Hangman
                 string nextMessage = ""; // Variable to store the message for the next iteration of the loop
                 int wrongGuesses = 0;
                 string guessedLetters = "";
-                string displayWord = new string('_', wordToGuess.Length);
+                string displayWord = new('_', wordToGuess.Length);
                 while (displayWord.Contains('_'))
                 {
                     Console.Clear();
@@ -129,23 +132,20 @@ namespace _03_Hangman
 
                     if (endGame)
                     {
-                        Console.WriteLine("Do you want to play again? (y/n)");
+                        Console.WriteLine($"Do you want to play again? ({POSITIVE_USER_RESPONSE}/{NEGATIVE_USER_RESPONSE})");
                         string? playAgain = Console.ReadLine()?.ToLower();
-                        if (playAgain == "y")
+                        if (playAgain == POSITIVE_USER_RESPONSE)
                         {
                             break; // Exit the inner loop and restart the outer loop
                         }
-                        else
-                        {
-                            Environment.Exit(0); // Quit the game
-                        }
+                        return;
                     }
 
                     if (lastGuess)
                     {
-                        Console.WriteLine("Do you want to try to guess the word? (y/n)");
+                        Console.WriteLine($"Do you want to try to guess the word? ({POSITIVE_USER_RESPONSE}/{NEGATIVE_USER_RESPONSE})");
                         string? guessWord = Console.ReadLine()?.ToLower();
-                        if (guessWord == "y")
+                        if (guessWord == POSITIVE_USER_RESPONSE)
                         {
                             Console.Write("Please enter your guess: ");
                             string? wordGuess = Console.ReadLine()?.ToLower();
@@ -218,16 +218,13 @@ namespace _03_Hangman
                             Console.WriteLine(line);
                         }
                         Console.WriteLine($"Congratulations! You've guessed the word: {wordToGuess}");
-                        Console.WriteLine("Do you want to play again? (y/n)");
+                        Console.WriteLine($"Do you want to play again? ({POSITIVE_USER_RESPONSE}/{NEGATIVE_USER_RESPONSE})");
                         string? playAgain = Console.ReadLine()?.ToLower();
-                        if (playAgain == "y")
+                        if (playAgain == POSITIVE_USER_RESPONSE)
                         {
                             break; // Exit the inner loop and restart the outer loop
                         }
-                        else
-                        {
-                            Environment.Exit(0); // Quit the game
-                        }
+                        return;
                     }
                     else if (wrongGuesses == maxWrongGuesses)
                     {
@@ -237,16 +234,13 @@ namespace _03_Hangman
                             Console.WriteLine(line);
                         }
                         Console.WriteLine($"Sorry, you've run out of guesses. The word was: {wordToGuess}");
-                        Console.WriteLine("Do you want to play again? (y/n)");
+                        Console.WriteLine($"Do you want to play again? ({POSITIVE_USER_RESPONSE}/{NEGATIVE_USER_RESPONSE})");
                         string? playAgain = Console.ReadLine()?.ToLower();
-                        if (playAgain == "y")
+                        if (playAgain == POSITIVE_USER_RESPONSE)
                         {
                             break; // Exit the inner loop and restart the outer loop
                         }
-                        else
-                        {
-                            Environment.Exit(0); // Quit the game
-                        }
+                        return;
                     }
                 }
                 continue;
