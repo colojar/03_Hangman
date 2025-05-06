@@ -11,8 +11,12 @@ namespace _03_Hangman
 {
     internal class Program
     {
+        const string POSITIVE_USER_RESPONSE = "y";
+        const string NEGATIVE_USER_RESPONSE = "n";
         static void Main()
         {
+            const string QUIT_USER_RESPONSE = "q";
+            const string RESTART_USER_RESPONSE = "r";
             while (true)
             {
 
@@ -28,7 +32,7 @@ namespace _03_Hangman
 
                 Console.WriteLine();
                 Console.WriteLine("Please enter a word to guess or press enter to use a random word.");
-                Console.WriteLine("(Press 'q' to quit or 'r' to restart)");
+                Console.WriteLine($"(Press '{QUIT_USER_RESPONSE}' to quit or '{RESTART_USER_RESPONSE}' to restart)");
                 string? wordToGuess = "";
                 ConsoleKeyInfo keyInfo;
                 do
@@ -41,11 +45,11 @@ namespace _03_Hangman
                     }
                 } while (keyInfo.Key != ConsoleKey.Enter);
                 Console.WriteLine();
-                if (wordToGuess == "q")
+                if (wordToGuess == QUIT_USER_RESPONSE)
                 {
                     break;
                 }
-                else if (wordToGuess == "r")
+                else if (wordToGuess == RESTART_USER_RESPONSE)
                 {
                     Console.Clear();
                     continue;
@@ -102,14 +106,14 @@ namespace _03_Hangman
 
                     if (endGame)
                     {
-                        PlayAgain();
+                        if (!PlayAgain()) { return; }
                     }
 
                     if (lastGuess)
                     {
-                        Console.WriteLine("Do you want to try to guess the word? (y/n)");
+                        Console.WriteLine($"Do you want to try to guess the word? ({POSITIVE_USER_RESPONSE}/{NEGATIVE_USER_RESPONSE})");
                         string? guessWord = Console.ReadLine()?.ToLower();
-                        if (guessWord == "y")
+                        if (guessWord == POSITIVE_USER_RESPONSE)
                         {
                             Console.Write("Please enter your guess: ");
                             string? wordGuess = Console.ReadLine()?.ToLower();
@@ -174,14 +178,14 @@ namespace _03_Hangman
                     {
                         HangmanLogo();
                         Console.WriteLine($"Congratulations! You've guessed the word: {wordToGuess}");
-                        PlayAgain();
+                        if (!PlayAgain()) { return; }
 
                     }
                     else if (wrongGuesses == maxWrongGuesses)
                     {
                         HangmanLogo();
                         Console.WriteLine($"Sorry, you've run out of guesses. The word was: {wordToGuess}");
-                        PlayAgain();
+                        if (!PlayAgain()) { return; }
                     }
                 }
                 continue;
@@ -208,18 +212,15 @@ namespace _03_Hangman
             Console.WriteLine("       | ");
             Console.WriteLine("=========");
         }
-        static void PlayAgain()
+        static bool PlayAgain()
         {
-            Console.WriteLine("Do you want to play again? (y/n)");
+            Console.WriteLine($"Do you want to play again? {POSITIVE_USER_RESPONSE}/{NEGATIVE_USER_RESPONSE}");
             string? playAgain = Console.ReadLine()?.ToLower();
-            if (playAgain == "y")
+            if (playAgain == POSITIVE_USER_RESPONSE)
             {
-                Main();
+                return true;
             }
-            else
-            {
-                Environment.Exit(0);
-            }
+            return false;
         }
     }
 }
